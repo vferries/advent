@@ -50,13 +50,9 @@ class Day7Test {
         do {
             addFreeOnesWithCurrent(next, letters, current, res, precedence)
 
-            //TODO
             while (current.size < 5 && !next.isEmpty()) {
                 val elem = next.pollFirst()
                 current.add(elem to toDuration(elem))
-                println(current)
-                println(next)
-                println()
             }
             val min = current.map { it.second }.min()!!
             current = current.map { (l, d) -> l to (d - min)}.toMutableList()
@@ -65,9 +61,7 @@ class Day7Test {
             count += min
 
             addFreeOnesWithCurrent(next, letters, current, res, precedence)
-            println(next.size)
         } while (next.size > 0 || current.isNotEmpty())
-        println(res)
         println(count)
     }
 
