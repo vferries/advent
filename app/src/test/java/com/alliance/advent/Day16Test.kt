@@ -5,7 +5,7 @@ import org.junit.Test
 import java.io.File
 import kotlin.math.absoluteValue
 
-typealias Registers = Array<Int>
+typealias Registers = Array<Long>
 
 typealias Operation = (Registers, Int, Int, Int) -> Registers
 
@@ -41,7 +41,7 @@ val operations: Map<String, Operation> = mapOf(
     },
     "bani" to { before, a, b, c ->
         val res = before.copyOf()
-        res[c] = before[a] and b
+        res[c] = before[a] and b.toLong()
         res
     },
     "borr" to { before, a, b, c ->
@@ -51,7 +51,7 @@ val operations: Map<String, Operation> = mapOf(
     },
     "bori" to { before, a, b, c ->
         val res = before.copyOf()
-        res[c] = before[a] or b
+        res[c] = before[a] or b.toLong()
         res
     },
     "setr" to { before, a, _, c ->
@@ -61,7 +61,7 @@ val operations: Map<String, Operation> = mapOf(
     },
     "seti" to { before, a, _, c ->
         val res = before.copyOf()
-        res[c] = a
+        res[c] = a.toLong()
         res
     },
     "gtir" to { before, a, b, c ->
@@ -81,12 +81,12 @@ val operations: Map<String, Operation> = mapOf(
     },
     "eqir" to { before, a, b, c ->
         val res = before.copyOf()
-        res[c] = if (a == before[b]) 1 else 0
+        res[c] = if (a.toLong() == before[b]) 1 else 0
         res
     },
     "eqri" to { before, a, b, c ->
         val res = before.copyOf()
-        res[c] = if (before[a] == b) 1 else 0
+        res[c] = if (before[a] == b.toLong()) 1 else 0
         res
     },
     "eqrr" to { before, a, b, c ->
@@ -114,11 +114,11 @@ class Day16Test {
         for (i in 0 until lines.size step 4) {
             if (lines[i].startsWith("Before")) {
                 val (ba, bb, bc, bd) = """(\d+), (\d+), (\d+), (\d+)""".toRegex().find(lines[i])?.destructured!!
-                val before = arrayOf(ba.toInt(), bb.toInt(), bc.toInt(), bd.toInt())
+                val before = arrayOf(ba.toLong(), bb.toLong(), bc.toLong(), bd.toLong())
                 val (op, a, b, c) = """(\d+) (\d+) (\d+) (\d+)""".toRegex().find(lines[i + 1])?.destructured!!
                 val instruction = Instruction(op.toInt(), a.toInt(), b.toInt(), c.toInt())
                 val (aa, ab, ac, ad) = """(\d+), (\d+), (\d+), (\d+)""".toRegex().find(lines[i + 2])?.destructured!!
-                val after = arrayOf(aa.toInt(), ab.toInt(), ac.toInt(), ad.toInt())
+                val after = arrayOf(aa.toLong(), ab.toLong(), ac.toLong(), ad.toLong())
                 val sample = Sample(before, instruction, after)
                 samples.add(sample)
             }
@@ -129,7 +129,7 @@ class Day16Test {
     @Test
     fun day16Part2() {
         val program = inputLines().drop(3006).map { line -> line.split(" ").map(String::toInt) }
-        val result = program.fold(arrayOf(0, 0, 0, 0)) { registers, (opCode, a, b, c) ->
+        val result = program.fold(arrayOf(0L, 0L, 0L, 0L)) { registers, (opCode, a, b, c) ->
             operations.getValue(opCodeToName.getValue(opCode))(registers, a, b, c)
         }
         println(result[0])

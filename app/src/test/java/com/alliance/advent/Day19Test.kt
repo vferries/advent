@@ -17,9 +17,9 @@ class Day19Test {
             val (opCode, a, b, c) = """(.+) (\d+) (\d+) (\d+)""".toRegex().find(it)?.destructured!!
             Op(opCode, a.toInt(), b.toInt(), c.toInt())
         }
-        var registers = arrayOf(1, 0, 0, 0, 0, 0)
+        var registers = arrayOf(1L, 0L, 0L, 0L, 0L, 0L)
         while (registers[ip] >= 0 && registers[ip] < instructions.size) {
-            val op = instructions[registers[ip]]
+            val op = instructions[registers[ip].toInt()]
             registers = operations.getValue(op.code).invoke(registers, op.a, op.b, op.c)
             registers[ip]++
             println(registers.joinToString(", "))
